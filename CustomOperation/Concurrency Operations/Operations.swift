@@ -30,6 +30,7 @@ class PendingOperations
 class JSONDownloadOperation: Operation
 {
     var url: URL
+    var data: Data?
     
     init(_ url: URL) {
         self.url = url
@@ -42,20 +43,29 @@ class JSONDownloadOperation: Operation
         
         guard !isCancelled else { return }
         
-        JSONData.data = data
-        JSONData.state = .downloaded
+        self.data = data
+//        JSONData.data = data
+//        JSONData.state = .downloaded
     }
 }
 
 class JSONParsarOperation: Operation
 {
+    var data: Data?
+    
     override func main() {
         
         guard !isCancelled else { return }
         
         do
         {
-            guard let jsonObj = try JSONSerialization.jsonObject(with: JSONData.data, options: .allowFragments) as? [String: Any] else { print("json error"); return }
+            guard let data = self.data else { return }
+            
+            guard let jsonObj = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any]
+            else {
+                print("json error")
+                return
+            }
             
             guard !isCancelled else { return }
             
@@ -70,7 +80,7 @@ class JSONParsarOperation: Operation
                 let imageUrlString = media?["m"]
                 if let urlString = imageUrlString, let title = title, !title.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).isEmpty
                 {
-                    guard let url = URL(string: urlString) else { return }
+                    guard let url = URL(string: urlString) else { DataSource.state = .failed; return }
                     let imageInfo = ImageModel(title: title, url: url)
                     DataSource.dataSource.append(imageInfo)
                 }
@@ -95,17 +105,41 @@ class ImageDownloadOperation: Operation
     }
     
     override func main() {
-        guard !isCancelled else { self.imageInfo.state = .downloadCancelled; return }
+        guard !isCancelled else { self.imageInfo.state = .cancelled; return }
         
         guard let url = self.imageInfo.imageURL else { self.imageInfo.state = .failed; return }
         
-        guard let data = try? Data(contentsOf: url) else { self.imageInfo.state = .failed; return }
+        guard let data = try? Data(contentsOf: url) else {
+            self.imageInfo.state = .failed
+            self.imageInfo.image = UIImage(systemName: "photo.fill")
+            return
+        }
         
-        guard !isCancelled else { self.imageInfo.state = .downloadCancelled; return }
+        guard !isCancelled else { self.imageInfo.state = .cancelled; return }
         
         self.imageInfo.imageData = data
         self.imageInfo.image = UIImage(data: data)
         self.imageInfo.state = .downloaded
+    }
+}
+
+class ImageFiltrationForAllImagesOperation: Operation
+{
+    let imageInfo: ImageModel
+    
+    init(_ imageInfo: ImageModel) {
+        self.imageInfo = imageInfo
+    }
+    
+    override func main() {
+        guard !isCancelled else { self.imageInfo.state = .cancelled; return }
+        
+        guard imageInfo.state == .downloaded else { self.imageInfo.state = .failed; return }
+        
+        guard let image = imageInfo.image else { self.imageInfo.state = .failed; return }
+        
+        imageInfo.image = image.filterImage(filter: .Mono)
+        imageInfo.state = .filtered
     }
 }
 

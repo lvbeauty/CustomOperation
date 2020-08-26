@@ -20,18 +20,17 @@
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="TableViewCell" rowHeight="91" id="eFf-Xc-oU1" customClass="TableViewCell" customModule="CustomOperation" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="28" width="414" height="91"/>
                                 <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="eFf-Xc-oU1" id="gAS-M3-jdn">
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="eFf-Xc-oU1" translatesAutoresizingMaskIntoConstraints="NO" id="gAS-M3-jdn">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="91"/>
-                                    <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="64" placeholderIntrinsicHeight="85" image="photo.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="Cq6-WW-n33">
-                                            <rect key="frame" x="20" y="5.5" width="64" height="79.5"/>
+                                            <rect key="frame" x="20" y="5.5" width="66.5" height="83"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" secondItem="Cq6-WW-n33" secondAttribute="height" multiplier="32:41" id="VUr-Yv-Vqh"/>
                                             </constraints>
                                         </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vXi-1q-RHF">
-                                            <rect key="frame" x="99" y="35.5" width="42" height="20.5"/>
+                                            <rect key="frame" x="101.5" y="37" width="42" height="20.5"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -175,7 +174,7 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
-                        <segue destination="VhD-mf-RNt" kind="relationship" relationship="rootViewController" id="z6r-Qa-r44"/>
+                        <segue destination="VhD-mf-RNt" kind="relationship" relationship="rootViewController" id="j1B-bd-ELj"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="IqA-Rq-vPO" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

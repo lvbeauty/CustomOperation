@@ -19,7 +19,13 @@ class ViewModel
         let jsonDownloadOp = JSONDownloadOperation(url)
         let jsonParsingOp = JSONParsarOperation()
         
-        jsonParsingOp.addDependency(jsonDownloadOp)
+        let op = BlockOperation {
+            jsonParsingOp.data = jsonDownloadOp.data
+        }
+        
+        op.addDependency(jsonDownloadOp)
+        jsonParsingOp.addDependency(op)
+//        jsonParsingOp.addDependency(jsonDownloadOp)
         
         jsonParsingOp.completionBlock = {
             OperationQueue.main.addOperation {
@@ -27,8 +33,12 @@ class ViewModel
             }
         }
         
+//        jsonDownloadOp.completionBlock = {
+//                jsonParsingOp.data = jsonDownloadOp.data
+//        }
+        
         let queue = OperationQueue()
-        queue.addOperations([jsonDownloadOp, jsonParsingOp], waitUntilFinished: false)
+        queue.addOperations([jsonDownloadOp, op, jsonParsingOp], waitUntilFinished: false)
     }
     
     func startDownloadImage(for imageInfo: ImageModel, at indexPath: IndexPath, completeHandler: @escaping () -> ())
@@ -55,13 +65,12 @@ class ViewModel
     
     func startFilterImage(for imageInfo: ImageModel, at indexPath: IndexPath, completeHandler: @escaping () -> ())
     {
+        guard imageInfo.state == .downloaded else { return }
         
         guard pendingOperations.filterationsInProgress[indexPath] == nil else { return }
         
-        let filterOp = ImageFiltrationOperation(imageInfo)
-        
-        pendingOperations.filterationsInProgress[indexPath] = filterOp
-        pendingOperations.filterationQueue.addOperation(filterOp)
+        let filterOp = ImageFiltrationForAllImagesOperation(imageInfo)
+//        let filterOp = ImageFiltrationOperation(imageInfo)
         
         filterOp.completionBlock = {
             guard !filterOp.isCancelled else { return }
@@ -72,5 +81,11 @@ class ViewModel
             }
         }
         
+        pendingOperations.filterationsInProgress[indexPath] = filterOp
+        pendingOperations.filterationQueue.addOperation(filterOp)
+    }
+    
+    deinit {
+        print("View Model deallocated")
     }
 }

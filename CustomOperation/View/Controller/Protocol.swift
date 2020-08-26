@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol ImageTransferDelegete
+protocol ImageTransferDelegete: class //reference type
 {
     func imageTransfer(image: UIImage, indexPath: IndexPath)
 }

@@ -10,7 +10,7 @@ import UIKit
 
 enum ImageState
 {
-    case new, downloaded, downloadCancelled, filtered, filterCancelled, failed
+    case new, downloaded, cancelled, filtered, failed
 }
 
 class ImageModel
@@ -34,11 +34,11 @@ struct FilteredModel
     var filteredImage: UIImage
 }
 
-class JSONData
-{
-    static var data = Data()
-    static var state: ImageState = .new
-}
+//class JSONData
+//{
+//    static var data = Data()
+//    static var state: ImageState = .new
+//}
 
 class DataSource
 {

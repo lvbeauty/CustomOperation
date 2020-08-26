@@ -14,6 +14,7 @@ class ViewController: UIViewController
     @IBOutlet weak var collectionView: UICollectionView!
     
     var delegate: ImageTransferDelegete?
+    
     var imageInfo: ImageModel!
     var viewModel = ViewModel()
     var image: UIImage?
@@ -41,19 +42,26 @@ class ViewController: UIViewController
         if let imageIF = imageInfo, let indexP = indexPath
         {
             photoImageView.image = imageIF.image
-            viewModel.startFilterImage(for: imageIF, at: indexP) {
-                OperationQueue.main.addOperation {
-                    self.collectionView.reloadData()
-                }
-            }
+//            viewModel.startFilterImage(for: imageIF, at: indexP) {
+//                OperationQueue.main.addOperation {
+//                    self.collectionView.reloadData()
+//                }
+//            }
         }
     }
     
     @IBAction func saveButtonTapped(_ sender: Any)
     {
         guard let image = photoImageView.image, let indexP = indexPath else { return }
-        delegate?.imageTransfer(image: image, indexPath: indexP)
         self.navigationController?.popToRootViewController(animated: true)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            self.delegate?.imageTransfer(image: image, indexPath: indexP)
+        }
+    }
+    
+    deinit {
+        print("view controller deallocated")
     }
 }
 
